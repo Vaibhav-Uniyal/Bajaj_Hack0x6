@@ -6,7 +6,7 @@
       "use": "@vercel/python",
       "config": {
         "runtime": "python3.9",
-        "requirements": "requirements.txt"
+        "requirements": "requirements-vercel.txt"
       }
     }
   ],
