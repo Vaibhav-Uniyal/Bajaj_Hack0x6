@@ -1,6 +1,12 @@
 import uvicorn
 import logging
-from src.api import app
+import os
+import sys
+
+# Add the project root to Python path
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
+from src.api_serverless import app
 from src.config import Config
 
 if __name__ == "__main__":
