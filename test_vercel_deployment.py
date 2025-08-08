@@ -6,31 +6,19 @@ Test Vercel deployment
 import requests
 import json
 import os
+from api_config import API_BASE_URL, API_HEADERS, HEALTH_ENDPOINT, BASIC_QUERY_ENDPOINT, DETAILED_QUERY_ENDPOINT
 
 def test_vercel_deployment():
     """Test Vercel deployment"""
     
-    # Get deployment URL from environment or use placeholder
-    base_url = os.getenv("VERCEL_URL", "https://your-project-name.vercel.app")
-    if base_url.startswith("http://"):
-        base_url = base_url.replace("http://", "https://")
-    
-    token = "db3d35016048bf11a289b37ed27dcda6b8b647e12051704e4e011501361414a6"
-    
-    headers = {
-        "Authorization": f"Bearer {token}",
-        "Content-Type": "application/json",
-        "Accept": "application/json"
-    }
-    
     print("🚀 Testing Vercel Deployment")
     print("=" * 50)
-    print(f"📡 Base URL: {base_url}")
+    print(f"📡 Base URL: {API_BASE_URL}")
     
     # Test 1: Health Check
     print(f"\n1️⃣ Testing health endpoint...")
     try:
-        response = requests.get(f"{base_url}/api/v1/health", timeout=30)
+        response = requests.get(HEALTH_ENDPOINT, timeout=30)
         print(f"✅ Health Status: {response.status_code}")
         if response.status_code == 200:
             health_data = response.json()
@@ -55,8 +43,8 @@ def test_vercel_deployment():
     
     try:
         response = requests.post(
-            f"{base_url}/api/v1/hackrx/run",
-            headers=headers,
+            BASIC_QUERY_ENDPOINT,
+            headers=API_HEADERS,
             json=test_request,
             timeout=60
         )
@@ -81,8 +69,8 @@ def test_vercel_deployment():
     print(f"\n3️⃣ Testing detailed query endpoint...")
     try:
         response = requests.post(
-            f"{base_url}/api/v1/hackrx/run/detailed",
-            headers=headers,
+            DETAILED_QUERY_ENDPOINT,
+            headers=API_HEADERS,
             json=test_request,
             timeout=60
         )
@@ -105,7 +93,7 @@ def test_vercel_deployment():
     try:
         # Test without token
         response = requests.post(
-            f"{base_url}/api/v1/hackrx/run",
+            BASIC_QUERY_ENDPOINT,
             headers={"Content-Type": "application/json"},
             json=test_request,
             timeout=30
@@ -121,13 +109,13 @@ def test_vercel_deployment():
     
     print(f"\n🎯 Deployment Test Summary")
     print("=" * 50)
-    print(f"✅ Your API is deployed at: {base_url}")
-    print(f"✅ Health endpoint: {base_url}/api/v1/health")
-    print(f"✅ Basic query: {base_url}/api/v1/hackrx/run")
-    print(f"✅ Detailed query: {base_url}/api/v1/hackrx/run/detailed")
+    print(f"✅ Your API is deployed at: {API_BASE_URL}")
+    print(f"✅ Health endpoint: {HEALTH_ENDPOINT}")
+    print(f"✅ Basic query: {BASIC_QUERY_ENDPOINT}")
+    print(f"✅ Detailed query: {DETAILED_QUERY_ENDPOINT}")
     print(f"\n📝 Usage Example:")
-    print(f"curl -X POST '{base_url}/api/v1/hackrx/run' \\")
-    print(f"  -H 'Authorization: Bearer {token}' \\")
+    print(f"curl -X POST '{BASIC_QUERY_ENDPOINT}' \\")
+    print(f"  -H 'Authorization: Bearer {API_HEADERS['Authorization'].split(' ')[1]}' \\")
     print(f"  -H 'Content-Type: application/json' \\")
     print(f"  -d '{{\"documents\": [\"https://example.com/policy.pdf\"], \"questions\": [\"What is the grace period?\"]}}'")
 
